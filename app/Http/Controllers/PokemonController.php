@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Pokemon;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -31,14 +32,18 @@ class PokemonController extends Controller
     {
         $array_data = json_decode($json_data,true);
 
+        $transactionModel              = new Transaction;
         $pokemonModel                  = new Pokemon;
         $pokemonModel->name            = $array_data['name'];
         $pokemonModel->buy_price       = $array_data['buyPrice'];
-        $pokemonModel->buy_date        = $array_data['buyDate'];
         $pokemonModel->imagem          = $array_data['imagem'];
         $pokemonModel->base_experience = $array_data['baseExp'];
-        $pokemonModel->status          = $pokemonModel::IN_STOCK;
         if($pokemonModel->save()) {
+            $transactionModel->pokemon_id = $pokemonModel->id;
+            $transactionModel->buy_date   = $array_data['buyDate'];
+            $transactionModel->type       = $transactionModel::TYPE_BUY;
+            $transactionModel->save();
+
             return http_response_code(200);
         }
         return http_response_code(500);
@@ -53,16 +58,14 @@ class PokemonController extends Controller
      */
     public function sellPokemon($json_data)
     {
-        $array_data   = json_decode($json_data,true);
-        $pokemonModel = Pokemon::find($array_data['id']);
+        $array_data       = json_decode($json_data,true);
+        $transactionModel = new Transaction;
 
-        if($pokemonModel) {
-            $pokemonModel->sell_price      = $array_data['sellPrice'];
-            $pokemonModel->sell_date       = $array_data['sellDate'];
-            $pokemonModel->status          = $pokemonModel::SOLD;
-            if($pokemonModel->save()) {
-                return http_response_code(200);
-            }
+        $transactionModel->sell_price = $array_data['sellPrice'];
+        $transactionModel->sell_date  = $array_data['sellDate'];
+        $transactionModel->status     = $transactionModel::TYPE_SELL;
+        if($transactionModel->save()) {
+            return http_response_code(200);
         }
         return http_response_code(500);
     }

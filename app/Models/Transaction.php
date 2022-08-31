@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pokemon extends Model
+class Transaction extends Model
 {
     use HasFactory;
-    public $table = 'pokemons';
+    public $table = 'transactions';
+
+    const TYPE_BUY  = 1;
+    const TYPE_SELL = 2;
 }
