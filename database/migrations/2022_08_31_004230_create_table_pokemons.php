@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('pokemons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('buy_price', $precision = 8, $scale = 2);
-            $table->decimal('sell_price', $precision = 8, $scale = 2)->nullable();
-            $table->string('imagem')->nullable();
+            $table->double('buy_price', 8, 2);
+            $table->double('sell_price', 8, 2);
+            $table->string('imagem');
             $table->integer('base_experience');
             $table->timestamps();
         });

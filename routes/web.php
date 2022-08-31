@@ -17,6 +17,7 @@ Route::get('/pokemons/index', [PokemonController::class, 'index']);
 Route::post('/pokemons/create/{json_data}', [PokemonController::class, 'create']);
 Route::post('/pokemons/sellPokemon/{json_data}', [PokemonController::class, 'sellPokemon']);
 Route::get('/pokemons/history', [PokemonController::class, 'historyOperations']);
+Route::get('/pokemons/names', [PokemonController::class, 'getNames']);
 
 
 Route::get('/', function () {
