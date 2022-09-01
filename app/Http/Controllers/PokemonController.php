@@ -38,7 +38,6 @@ class PokemonController extends Controller
 
         $dataImg = file_get_contents($data->forms[0]->url);
         $image = json_decode($dataImg)->sprites->front_default;
-        dd($data->forms[0]->url);
 
         $transactionModel              = new Transaction;
         $pokemonModel                  = new Pokemon;
