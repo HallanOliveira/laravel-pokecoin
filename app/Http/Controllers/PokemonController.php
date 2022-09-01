@@ -93,7 +93,7 @@ class PokemonController extends Controller
     public function getNames()
     {
         return DB::table('names')
-            ->select(['name', 'external_id'])
+            ->select(['name as label', 'external_id as value'])
             ->orderBy('name', 'asc')
             ->get();
     }
