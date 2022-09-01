@@ -27,9 +27,8 @@ class PokemonController extends Controller
             $p->currentPriceUSD = $p->base_experience * $unitValuePokemonUSD;
             $amountCurrentUSD  += $p->currentPriceUSD;
         }
-
         $arrayReturn['inventory']     = $inventoryPokemons;
-        $arrayReturn['amountCurrent'] = $amountCurrentUSD;
+        $arrayReturn['amountCurrent'] = number_format($amountCurrentUSD);
         $arrayReturn['amountApplied'] = DB::table('pokemons')->whereNull('sell_price')->sum('buy_price');
         $arrayReturn['optionsNames']  = DB::table('names')->select(['name as label', 'external_id as value'])->orderBy('name', 'asc')->get();
         return $arrayReturn;
