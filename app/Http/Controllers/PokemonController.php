@@ -38,6 +38,7 @@ class PokemonController extends Controller
 
         $dataImg = file_get_contents($data->forms[0]->url);
         $image = json_decode($dataImg)->sprites->front_default;
+        dd($data->forms[0]->url);
 
         $transactionModel              = new Transaction;
         $pokemonModel                  = new Pokemon;
@@ -94,6 +95,13 @@ class PokemonController extends Controller
             ->select(['name as label', 'external_id as value'])
             ->orderBy('name', 'asc')
             ->get();
+    }
+
+    public function getAmountApplied()
+    {
+        return DB::table('pokemons')
+            ->whereNull('sell_price')
+            ->sum('buy_price');
     }
 
     /**

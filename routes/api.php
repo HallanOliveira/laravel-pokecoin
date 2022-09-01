@@ -28,3 +28,5 @@ Route::post('/pokemons/sellPokemon/{json_data}', [PokemonController::class, 'sel
 Route::get('/pokemons/history', [PokemonController::class, 'historyOperations']);
 
 Route::get('/pokemons/names', [PokemonController::class, 'getNames']);
+
+Route::get('/pokemons/amountApplied', [PokemonController::class, 'getAmountApplied']);
