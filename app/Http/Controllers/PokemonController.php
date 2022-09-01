@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pokemon;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
@@ -18,7 +17,22 @@ class PokemonController extends Controller
      */
     public function index()
     {
-        return Pokemon::all()->whereNull('sell_price');
+        $dataBitcoin       = file_get_contents('https://blockchain.info/ticker');
+        $priceBitcoinUSD   = json_decode($dataBitcoin)->USD->last;
+        $unitValuePokemonUSD  = $priceBitcoinUSD * 0.00000001;
+        $inventoryPokemons = Pokemon::all()->whereNull('sell_price');
+
+        $amountCurrentUSD = 0;
+        foreach($inventoryPokemons as $p) {
+            $p->currentPriceUSD = $p->base_experience * $unitValuePokemonUSD;
+            $amountCurrentUSD  += $p->currentPriceUSD;
+        }
+
+        $arrayReturn['inventory']     = $inventoryPokemons;
+        $arrayReturn['amountCurrent'] = $amountCurrentUSD;
+        $arrayReturn['amountApplied'] = DB::table('pokemons')->whereNull('sell_price')->sum('buy_price');
+        $arrayReturn['optionsNames']  = DB::table('names')->select(['name as label', 'external_id as value'])->orderBy('name', 'asc')->get();
+        return $arrayReturn;
     }
 
     /**
@@ -90,17 +104,12 @@ class PokemonController extends Controller
 
     public function getNames()
     {
-        return DB::table('names')
-            ->select(['name as label', 'external_id as value'])
-            ->orderBy('name', 'asc')
-            ->get();
+        return null;
     }
 
     public function getAmountApplied()
     {
-        return DB::table('pokemons')
-            ->whereNull('sell_price')
-            ->sum('buy_price');
+        return null;
     }
 
     /**
