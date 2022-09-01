@@ -28,7 +28,7 @@ class PokemonController extends Controller
             $amountCurrentUSD  += $p->currentPriceUSD;
         }
         $arrayReturn['inventory']     = $inventoryPokemons;
-        $arrayReturn['amountCurrent'] = number_format($amountCurrentUSD);
+        $arrayReturn['amountCurrent'] = $amountCurrentUSD;
         $arrayReturn['amountApplied'] = DB::table('pokemons')->whereNull('sell_price')->sum('buy_price');
         $arrayReturn['optionsNames']  = DB::table('names')->select(['name as label', 'external_id as value'])->orderBy('name', 'asc')->get();
         return $arrayReturn;
@@ -99,16 +99,6 @@ class PokemonController extends Controller
             ->select(['transactions.id', 'pokemons.name', 'transactions.type', 'transactions.date'])
             ->orderBy('date', 'desc')
             ->get();
-    }
-
-    public function getNames()
-    {
-        return null;
-    }
-
-    public function getAmountApplied()
-    {
-        return null;
     }
 
     /**
