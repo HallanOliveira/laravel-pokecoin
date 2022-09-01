@@ -18,9 +18,7 @@ class PokemonController extends Controller
      */
     public function index()
     {
-        $pokemon = Pokemon::all()->where('status', Pokemon::IN_STOCK);
-        return $pokemon->toJson();
-
+        return Pokemon::all()->whereNull('sell_price');
     }
 
     /**
