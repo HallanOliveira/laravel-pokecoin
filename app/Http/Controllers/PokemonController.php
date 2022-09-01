@@ -94,11 +94,23 @@ class PokemonController extends Controller
 
     public function historyOperations()
     {
-        return DB::table('transactions')
-            ->join('pokemons', 'transactions.pokemon_id', '=', 'pokemons.id')
-            ->select(['transactions.id', 'pokemons.name', 'transactions.type', 'transactions.date'])
-            ->orderBy('date', 'desc')
-            ->get();
+        return DB::select(DB::raw('
+            SELECT
+                t.id,
+                p.name,
+                t.type,
+                t.date,
+                (CASE
+                    WHEN t.type = 1 THEN p.buy_price
+                    ELSE p.sell_price
+                END) AS value
+            FROM
+                transactions t
+            JOIN pokemons p ON
+                t.pokemon_id = p.id
+            ORDER BY
+                t.date DESC
+        '));
     }
 
     /**
