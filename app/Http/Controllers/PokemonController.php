@@ -7,20 +7,19 @@ use App\Models\Pokemon;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 
-
 class PokemonController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Build data for index page.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
-        $dataBitcoin       = file_get_contents('https://blockchain.info/ticker');
-        $priceBitcoinUSD   = json_decode($dataBitcoin)->USD->last;
-        $unitValuePokemonUSD  = $priceBitcoinUSD * 0.00000001;
-        $inventoryPokemons = Pokemon::all()->whereNull('sell_price');
+        $dataBitcoin         = file_get_contents('https://blockchain.info/ticker');
+        $priceBitcoinUSD     = json_decode($dataBitcoin)->USD->last;
+        $unitValuePokemonUSD = $priceBitcoinUSD * 0.00000001;
+        $inventoryPokemons   = Pokemon::all()->whereNull('sell_price');
 
         $amountCurrentUSD = 0;
         foreach($inventoryPokemons as $p) {
@@ -35,9 +34,8 @@ class PokemonController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create a new pokemons and add transaction on database.
      *
-     * @return \Illuminate\Http\Response
      */
     public function create($json_data)
     {
@@ -52,13 +50,13 @@ class PokemonController extends Controller
         $dataImg = file_get_contents($data->forms[0]->url);
         $image = json_decode($dataImg)->sprites->front_default;
 
-        $transactionModel              = new Transaction;
         $pokemonModel                  = new Pokemon;
         $pokemonModel->name            = $namePokemon;
         $pokemonModel->buy_price       = $buy_price;
         $pokemonModel->imagem          = $image ;
         $pokemonModel->base_experience = $data->base_experience;
         if($pokemonModel->save()) {
+            $transactionModel             = new Transaction;
             $transactionModel->pokemon_id = $pokemonModel->id;
             $transactionModel->date       = $buy_date;
             $transactionModel->type       = $transactionModel::TYPE_BUY;
@@ -70,15 +68,12 @@ class PokemonController extends Controller
     }
 
     /**
-     * Sell the specified resource in storage.
+     * Sell the specified pokemon and add transaction on database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pokemon  $pokemon
-     * @return \Illuminate\Http\Response
      */
     public function sellPokemon($json_data)
     {
-        $array_data                   = json_decode($json_data,true);
+        $array_data = json_decode($json_data,true);
         Pokemon::find($array_data['id'])->update(['sell_price' => $array_data['sellPrice']]);
 
         $transactionModel             = new Transaction;
@@ -92,6 +87,9 @@ class PokemonController extends Controller
         return http_response_code(500);
     }
 
+    /**
+     * Return data of transactions.
+     */
     public function historyOperations()
     {
         return DB::select(DB::raw('
@@ -111,16 +109,5 @@ class PokemonController extends Controller
             ORDER BY
                 t.date DESC
         '));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pokemon  $pokemon
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pokemon $pokemon)
-    {
-        //
     }
 }

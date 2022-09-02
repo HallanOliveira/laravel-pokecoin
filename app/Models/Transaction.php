@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
-    public $table = 'transactions';
-
+    public $table   = 'transactions';
     const TYPE_BUY  = 1;
     const TYPE_SELL = 2;
 }
