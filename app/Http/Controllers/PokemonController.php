@@ -99,7 +99,7 @@ class PokemonController extends Controller
                 t.id,
                 p.name,
                 t.type,
-                t.date,
+                DATE_FORMAT(t.date, "%d-%m-%Y") AS date,
                 (CASE
                     WHEN t.type = 1 THEN p.buy_price
                     ELSE p.sell_price
