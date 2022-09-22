@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use stdClass;
 
 class Pokemon extends Model
 {
@@ -14,7 +13,8 @@ class Pokemon extends Model
     const API_POKEMONS        = 'https://pokeapi.co/api/v2/pokemon/';
     const BITCOIN_TO_POKECOIN =  0.00000001;
 
-    protected $table    = 'pokemons';
+    protected $table = 'pokemons';
+
     protected $fillable = ['name','buy_price','sell_price','imagem','base_experience'];
 
     protected $unitPricePokemon;
@@ -29,6 +29,9 @@ class Pokemon extends Model
         return self::all();
     }
 
+    /**
+     *
+     */
     public function getInventoryAndAmount(): object
     {
         $inventory = $this->search()->whereNull('sell_price');
@@ -40,7 +43,10 @@ class Pokemon extends Model
         return $inventory;
     }
 
-    public function getUnitPricePokemon()
+     /**
+     *
+     */
+    public function getUnitPricePokemon(): void
     {
         $dataBitcoin     = file_get_contents(self::API_BITCOIN);
         $dataDecode      = json_decode($dataBitcoin);
@@ -49,21 +55,29 @@ class Pokemon extends Model
         $this->unitPricePokemon = $priceBitcoinUSD * self::BITCOIN_TO_POKECOIN;
     }
 
+     /**
+     *
+     */
     public function getPricePokemon(int $base_xp): float
     {
         return $base_xp * $this->unitPricePokemon;
     }
 
+     /**
+     *
+     */
     public function getAmountCurrentUSD(): float
     {
         return $this->amountCurrentUSD;
     }
 
+     /**
+     *
+     */
     public function getAmountApplied(): float
     {
         return $this->search()->whereNull('sell_price')->sum('buy_price');
     }
-
 }
 
 

@@ -15,7 +15,7 @@ class PokemonController extends Controller
      *
      * @return array
      */
-    public function index()
+    public function index(): array
     {
         $model = new Pokemon;
         $modelNames = new Name;
@@ -24,7 +24,7 @@ class PokemonController extends Controller
            'inventory'     => $model->getInventoryAndAmount(),
            'amountCurrent' => $model->getAmountCurrentUSD(),
            'amountApplied' => $model->getAmountApplied(),
-           'optionsNames'  => $modelNames->getNames(),
+           'optionsNames'  => $modelNames->getNames()
         ];
 
     }
