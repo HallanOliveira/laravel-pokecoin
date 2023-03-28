@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Pokemon;
-use App\Models\Name;
+use App\Models\PokemonName;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 
@@ -18,7 +18,7 @@ class PokemonController extends Controller
     public function index(): array
     {
         $model = new Pokemon;
-        $modelNames = new Name;
+        $modelNames = new PokemonName;
         $model->getUnitPricePokemon();
         return [
            'inventory'     => $model->getInventoryAndAmount(),
