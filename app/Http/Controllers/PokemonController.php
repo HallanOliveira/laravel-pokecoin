@@ -4,28 +4,75 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Pokemon;
-use App\Models\PokemonName;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
+use App\Services\PokemonService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PokemonController extends Controller
 {
+    public function __construct(
+        private PokemonService $pokemonService
+    ){}
+
     /**
-     * Build data for index page.
+     * Get Index data.
      *
      * @return array
      */
-    public function index(): array
+    public function index(): JsonResponse
     {
-        $model = new Pokemon;
-        $modelNames = new PokemonName;
-        $model->getUnitPricePokemon();
-        return [
-           'inventory'     => $model->getInventoryAndAmount(),
-           'amountCurrent' => $model->getAmountCurrentUSD(),
-           'amountApplied' => $model->getAmountApplied(),
-           'optionsNames'  => $modelNames->getNames()
-        ];
+        try {
+            $pokemons = $this->pokemonService->getAll();
+        } catch(\Exception $e) {
+            return response()->json($e, 500);
+        }
+
+        return response()->json([
+            'data'    => $pokemons,
+            'success' => true
+        ], 200);
+
+    }
+
+    // /**
+    //  * Build data for index page.
+    //  *
+    //  * @return array
+    //  */
+    // public function index(): array
+    // {
+    //     $model = new Pokemon;
+    //     $modelNames = new PokemonName;
+    //     $model->getUnitPricePokemon();
+    //     return [
+    //        'inventory'     => $model->getInventoryAndAmount(),
+    //     //    'amountCurrent' => $model->getAmountCurrentUSD(),
+    //     //    'amountApplied' => $model->getAmountApplied(),
+    //     //    'optionsNames'  => $modelNames->getNames()
+    //     ];
+
+    // }
+
+    /**
+     * Get Index data.
+     *
+     * @return array
+     */
+    public function show(Pokemon $pokemon)
+    {
+        dd($pokemon);
+        try {
+            $pokemons = $this->pokemonService->show($pokemon->id);
+        } catch(\Exception $e) {
+            return response()->json($e, 500);
+        }
+
+        return response()->json([
+            'data'    => $pokemons,
+            'success' => true
+        ], 200);
 
     }
 
@@ -33,35 +80,69 @@ class PokemonController extends Controller
      * Create a new pokemons and add transaction on database.
      *
      */
-    public function create($json_data)
+    public function store(Pokemon $pokemon, Request $request)
     {
-        $array_data  = json_decode($json_data, true);
-        $idPokemon   = $array_data['id'];
-        $namePokemon = $array_data['name'];
-        $buy_price   = $array_data['buyPrice'];
-        $buy_date    = $array_data['buyDate'];
-        $data = file_get_contents(Pokemon::API_POKEMONS.$idPokemon);
-        $data = json_decode($data);
+        dd($request);
+        // $array_data  = json_decode($json_data, true);
+        // $idPokemon   = $array_data['id'];
+        // $namePokemon = $array_data['name'];
+        // $buy_price   = $array_data['buyPrice'];
+        // $buy_date    = $array_data['buyDate'];
+        // $data = file_get_contents(Pokemon::API_POKEMONS.$idPokemon);
+        // $data = json_decode($data);
 
-        $dataImg = file_get_contents($data->forms[0]->url);
-        $image = json_decode($dataImg)->sprites->front_default;
+        // $dataImg = file_get_contents($data->forms[0]->url);
+        // $image = json_decode($dataImg)->sprites->front_default;
 
-        $pokemonModel                  = new Pokemon;
-        $pokemonModel->name            = $namePokemon;
-        $pokemonModel->buy_price       = $buy_price;
-        $pokemonModel->imagem          = $image ;
-        $pokemonModel->base_experience = $data->base_experience;
-        if($pokemonModel->save()) {
-            $transactionModel             = new Transaction;
-            $transactionModel->pokemon_id = $pokemonModel->id;
-            $transactionModel->date       = $buy_date;
-            $transactionModel->type       = $transactionModel::TYPE_BUY;
-            $transactionModel->save();
+        // $pokemonModel                  = new Pokemon;
+        // $pokemonModel->name            = $namePokemon;
+        // $pokemonModel->buy_price       = $buy_price;
+        // $pokemonModel->imagem          = $image ;
+        // $pokemonModel->base_experience = $data->base_experience;
+        // if($pokemonModel->save()) {
+        //     $transactionModel             = new Transaction;
+        //     $transactionModel->pokemon_id = $pokemonModel->id;
+        //     $transactionModel->date       = $buy_date;
+        //     $transactionModel->type       = $transactionModel::TYPE_BUY;
+        //     $transactionModel->save();
 
-            return http_response_code(200);
-        }
-        return http_response_code(500);
+        //     return http_response_code(200);
+        // }
+        // return http_response_code(500);
     }
+    // /**
+    //  * Create a new pokemons and add transaction on database.
+    //  *
+    //  */
+    // public function create($json_data)
+    // {
+    //     $array_data  = json_decode($json_data, true);
+    //     $idPokemon   = $array_data['id'];
+    //     $namePokemon = $array_data['name'];
+    //     $buy_price   = $array_data['buyPrice'];
+    //     $buy_date    = $array_data['buyDate'];
+    //     $data = file_get_contents(Pokemon::API_POKEMONS.$idPokemon);
+    //     $data = json_decode($data);
+
+    //     $dataImg = file_get_contents($data->forms[0]->url);
+    //     $image = json_decode($dataImg)->sprites->front_default;
+
+    //     $pokemonModel                  = new Pokemon;
+    //     $pokemonModel->name            = $namePokemon;
+    //     $pokemonModel->buy_price       = $buy_price;
+    //     $pokemonModel->imagem          = $image ;
+    //     $pokemonModel->base_experience = $data->base_experience;
+    //     if($pokemonModel->save()) {
+    //         $transactionModel             = new Transaction;
+    //         $transactionModel->pokemon_id = $pokemonModel->id;
+    //         $transactionModel->date       = $buy_date;
+    //         $transactionModel->type       = $transactionModel::TYPE_BUY;
+    //         $transactionModel->save();
+
+    //         return http_response_code(200);
+    //     }
+    //     return http_response_code(500);
+    // }
 
     /**
      * Sell the specified pokemon and add transaction on database.

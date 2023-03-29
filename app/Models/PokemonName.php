@@ -13,13 +13,4 @@ class PokemonName extends Model
         'name',
         'external_id',
     ];
-
-    public function getNames(): object
-    {
-        return $this->select([
-            'name as label',
-            'external_id as value'
-        ])->orderBy('name', 'asc')
-        ->get();
-    }
 }
