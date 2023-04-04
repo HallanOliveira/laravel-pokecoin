@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+        WITH_XDEBUG: 1
+      context: ./
+      dockerfile: Dockerfile
+    image: pokecoin
+    container_name: pokecoin-app-laravel
+    restart: unless-stopped
+    working_dir: /var/www/
+    environment:
+      - PHP_IDE_CONFIG=serverName=docker-server
+      - XDEBUG_CONFIG=remote_host=192.168.2.47 remote_port=9001
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - pokecoin
+    links:
+      - postgres
+
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: pokecoin-nginx
+    restart: unless-stopped
+    ports:
+      - "8010:80"
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - pokecoin
+
+  redis:
+    image: redis:alpine
+    container_name: pokecoin-redis
+    restart: unless-stopped
+    networks:
+      - pokecoin
+
+  postgres:
+    image: postgres:12.6
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: pokecoin
+      POSTGRES_SCHEMA: public 
+    restart: always
+    ports:
+      - 54322:5432
+    networks:
+      - pokecoin
+
+networks:
+  pokecoin:
+    driver: bridge
+    external: true
