@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Services\PokemonService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePokemonRequest;
 
 class PokemonController extends Controller
 {
@@ -62,11 +63,10 @@ class PokemonController extends Controller
      */
     public function show(Pokemon $pokemon)
     {
-        dd($pokemon);
         try {
             $pokemons = $this->pokemonService->show($pokemon->id);
-        } catch(\Exception $e) {
-            return response()->json($e, 500);
+        } catch(\Exception $error) {
+            return response()->json($error, 500);
         }
 
         return response()->json([
@@ -80,9 +80,17 @@ class PokemonController extends Controller
      * Create a new pokemons and add transaction on database.
      *
      */
-    public function store(Pokemon $pokemon, Request $request)
+    public function store(Pokemon $pokemon, StorePokemonRequest $request)
     {
-        dd($request);
+        dd('teste');
+        try {
+            $test = $request->validate();
+        } catch (\Exception $error) {
+            dd($error);
+        }
+        // if ($request->validate(Pokemon::$rules)) {
+        //     $this->pokemonService->create($request->all());
+        // }
         // $array_data  = json_decode($json_data, true);
         // $idPokemon   = $array_data['id'];
         // $namePokemon = $array_data['name'];
@@ -109,6 +117,15 @@ class PokemonController extends Controller
         //     return http_response_code(200);
         // }
         // return http_response_code(500);
+    }
+
+    /**
+     * Create a new pokemons and add transaction on database.
+     *
+     */
+    public function destroy(Pokemon $pokemon, Request $request)
+    {
+        dd($request);
     }
     // /**
     //  * Create a new pokemons and add transaction on database.

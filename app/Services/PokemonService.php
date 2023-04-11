@@ -38,7 +38,7 @@ class PokemonService
      * @param integer|null $id
      * @return void
      */
-    public function show(int|null $id)
+    public function show($id)
     {
         return $this->pokemonModel->find($id);
     }

@@ -13,13 +13,25 @@ class Pokemon extends Model
     const API_POKEMONS        = 'https://pokeapi.co/api/v2/pokemon/';
     const BITCOIN_TO_POKECOIN =  0.00000001;
 
-    protected $table = 'pokemons';
-
-    protected $fillable = ['name','buy_price','sell_price','imagem','base_experience'];
+    protected $fillable = [
+        'name',
+        'buy_price',
+        'sell_price',
+        'image',
+        'base_experience'
+    ];
 
     protected $unitPricePokemon;
 
     protected $amountCurrentUSD;
+
+    public static $rules = [
+        'name'            => 'required|string|max:255',
+        'buy_price'       => 'nullable|numeric|between:0,99999999',
+        'sell_price'      => 'nullable|numeric|between:0,99999999',
+        'image'           => 'required|string|max:255',
+        'base_experience' => 'required|integer|max:8'
+    ];
 
     /**
      * get inventory

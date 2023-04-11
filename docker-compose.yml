@@ -28,7 +28,7 @@ services:
     container_name: pokecoin-nginx
     restart: unless-stopped
     ports:
-      - "8010:80"
+      - "8000:80"
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d
@@ -48,7 +48,7 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: pokecoin
-      POSTGRES_SCHEMA: public 
+      POSTGRES_SCHEMA: public
     restart: always
     ports:
       - 54322:5432

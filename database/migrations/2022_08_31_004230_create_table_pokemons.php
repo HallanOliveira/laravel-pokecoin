@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->double('buy_price', 8, 2);
             $table->double('sell_price', 8, 2);
-            $table->string('imagem');
+            $table->string('image');
             $table->integer('base_experience');
             $table->timestamps();
         });
