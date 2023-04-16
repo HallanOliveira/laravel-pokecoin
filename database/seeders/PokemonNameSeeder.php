@@ -9,6 +9,11 @@ use App\Services\PokemonNameService;
 
 class PokemonNameSeeder extends Seeder
 {
+
+    public function __construct(
+        private PokemonNameService $service
+    ) {}
+
     /**
      * Generate pokemons name on database.
      *
@@ -17,11 +22,10 @@ class PokemonNameSeeder extends Seeder
     public function run()
     {
         $webService    = new PokeApiWebService;
-        $service       = new PokemonNameService;
         $pokemonsArray = json_decode($webService->getPokemonNames()->body());
 
         foreach ($pokemonsArray->results as $pokemon) {
-            $service->create([
+            $this->service->create([
                 'name'        => $pokemon->name,
                 'external_id' => explode('/',$pokemon->url)[6] ?? 0
             ]);

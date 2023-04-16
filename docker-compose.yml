@@ -12,9 +12,6 @@ services:
     container_name: pokecoin-app-laravel
     restart: unless-stopped
     working_dir: /var/www/
-    environment:
-      - PHP_IDE_CONFIG=serverName=docker-server
-      - XDEBUG_CONFIG=remote_host=192.168.2.47 remote_port=9001
     volumes:
       - ./:/var/www
       - ./docker-compose/php/php.ini:/usr/local/etc/php/php.ini
