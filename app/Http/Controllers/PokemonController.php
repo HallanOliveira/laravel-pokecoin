@@ -80,13 +80,16 @@ class PokemonController extends Controller
      * Create a new pokemons and add transaction on database.
      *
      */
-    public function store(Pokemon $pokemon, StorePokemonRequest $request)
+    public function store(StorePokemonRequest $request)
     {
-        dd('teste');
         try {
-            $test = $request->validate();
+            $payload = $request->validated();
+            return response()->json([
+                'data'    => 'teste',
+                'success' => true
+            ], 200);
         } catch (\Exception $error) {
-            dd($error);
+            return response()->json($error, 500);
         }
         // if ($request->validate(Pokemon::$rules)) {
         //     $this->pokemonService->create($request->all());

@@ -21,9 +21,9 @@ class Pokemon extends Model
         'base_experience'
     ];
 
-    protected $unitPricePokemon;
+    // protected $unitPricePokemon;
 
-    protected $amountCurrentUSD;
+    // protected $amountCurrentUSD;
 
     public static $rules = [
         'name'            => 'required|string|max:255',
@@ -33,63 +33,63 @@ class Pokemon extends Model
         'base_experience' => 'required|integer|max:8'
     ];
 
-    /**
-     * get inventory
-     */
-    public function search(): object
-    {
-        return self::all();
-    }
+    // /**
+    //  * get inventory
+    //  */
+    // public function search(): object
+    // {
+    //     return self::all();
+    // }
 
-    /**
-     *
-     */
-    public function getInventoryAndAmount(): object
-    {
-        $inventory = $this->search()->whereNull('sell_price');
-        foreach($inventory as $p) {
-            $p->currentPriceUSD = $this->getPricePokemon($p->base_experience);
-            $this->amountCurrentUSD += $p->currentPriceUSD;
-        }
+    // /**
+    //  *
+    //  */
+    // public function getInventoryAndAmount(): object
+    // {
+    //     $inventory = $this->search()->whereNull('sell_price');
+    //     foreach($inventory as $p) {
+    //         $p->currentPriceUSD = $this->getPricePokemon($p->base_experience);
+    //         $this->amountCurrentUSD += $p->currentPriceUSD;
+    //     }
 
-        return $inventory;
-    }
+    //     return $inventory;
+    // }
 
-     /**
-     *
-     */
-    public function getUnitPricePokemon(): void
-    {
-        $dataBitcoin     = file_get_contents(self::API_BITCOIN);
-        $dataDecode      = json_decode($dataBitcoin);
-        $priceBitcoinUSD = $dataDecode->USD->last;
+    //  /**
+    //  *
+    //  */
+    // public function getUnitPricePokemon(): void
+    // {
+    //     $dataBitcoin     = file_get_contents(self::API_BITCOIN);
+    //     $dataDecode      = json_decode($dataBitcoin);
+    //     $priceBitcoinUSD = $dataDecode->USD->last;
 
-        $this->unitPricePokemon = $priceBitcoinUSD * self::BITCOIN_TO_POKECOIN;
-    }
+    //     $this->unitPricePokemon = $priceBitcoinUSD * self::BITCOIN_TO_POKECOIN;
+    // }
 
-     /**
-     *
-     */
-    public function getPricePokemon(int $base_xp): float
-    {
-        return $base_xp * $this->unitPricePokemon;
-    }
+    //  /**
+    //  *
+    //  */
+    // public function getPricePokemon(int $base_xp): float
+    // {
+    //     return $base_xp * $this->unitPricePokemon;
+    // }
 
-     /**
-     *
-     */
-    public function getAmountCurrentUSD(): float
-    {
-        return $this->amountCurrentUSD;
-    }
+    //  /**
+    //  *
+    //  */
+    // public function getAmountCurrentUSD(): float
+    // {
+    //     return $this->amountCurrentUSD;
+    // }
 
-     /**
-     *
-     */
-    public function getAmountApplied(): float
-    {
-        return $this->search()->whereNull('sell_price')->sum('buy_price');
-    }
+    //  /**
+    //  *
+    //  */
+    // public function getAmountApplied(): float
+    // {
+    //     return $this->search()->whereNull('sell_price')->sum('buy_price');
+    // }
 }
 
 

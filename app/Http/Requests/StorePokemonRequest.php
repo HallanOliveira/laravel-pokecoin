@@ -26,4 +26,19 @@ class StorePokemonRequest extends FormRequest
     {
         return Pokemon::$rules;
     }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, mixed>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name'            => 'Nome do Pokemon',
+            'buy_price'       => 'Valor de compra',
+            'sell_price'      => 'Valor de venda',
+            'image'           => 'Imagem'
+        ];
+    }
 }
