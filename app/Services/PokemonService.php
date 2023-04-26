@@ -23,6 +23,17 @@ class PokemonService
     }
 
     /**
+     * Update pokemon
+     *
+     * @param array $payload
+     * @return void
+     */
+    public function update(array $payload, Pokemon $pokemon)
+    {
+        return $pokemon->update($payload);
+    }
+
+    /**
      * Get all model itens
      *
      * @return Collection
@@ -43,4 +54,14 @@ class PokemonService
         return $this->pokemonModel->find($id);
     }
 
+    /**
+     * Get a especific pokemon
+     *
+     * @param integer|null $id
+     * @return void
+     */
+    public function delete(Pokemon $pokemon)
+    {
+        return $pokemon->delete();
+    }
 }

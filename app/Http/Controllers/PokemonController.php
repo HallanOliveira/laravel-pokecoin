@@ -10,6 +10,7 @@ use App\Services\PokemonService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePokemonRequest;
+use App\Http\Requests\UpdatePokemonRequest;
 
 class PokemonController extends Controller
 {
@@ -84,13 +85,14 @@ class PokemonController extends Controller
     {
         try {
             $payload = $request->validated();
-            return response()->json([
-                'data'    => 'teste',
-                'success' => true
-            ], 200);
+            $this->pokemonService->create($payload);
         } catch (\Exception $error) {
             return response()->json($error, 500);
         }
+        return response()->json([
+            'data'    => 'Cadastro efetuado com sucesso!',
+            'success' => true
+        ], 200);
         // if ($request->validate(Pokemon::$rules)) {
         //     $this->pokemonService->create($request->all());
         // }
@@ -126,9 +128,35 @@ class PokemonController extends Controller
      * Create a new pokemons and add transaction on database.
      *
      */
-    public function destroy(Pokemon $pokemon, Request $request)
+    public function destroy(Pokemon $pokemon)
     {
-        dd($request);
+        try {
+            $this->pokemonService->delete($pokemon);
+        } catch (\Exception $error) {
+            return response()->json($error, 500);
+        }
+        return response()->json([
+            'data'    => 'Pokemon excluído com sucesso!',
+            'success' => true
+        ], 200);
+    }
+
+    /**
+     * Create a new pokemons and add transaction on database.
+     *
+     */
+    public function update(Pokemon $pokemon, UpdatePokemonRequest $request)
+    {
+        try {
+            $payload = $request->validated();
+            $this->pokemonService->update($payload, $pokemon);
+        } catch (\Exception $error) {
+            return response()->json($error, 500);
+        }
+        return response()->json([
+            'data'    => 'Pokemon atualizado com sucesso!',
+            'success' => true
+        ], 200);
     }
     // /**
     //  * Create a new pokemons and add transaction on database.
