@@ -40,7 +40,7 @@ class PokemonService
      */
     public function getAll(): Collection
     {
-        return $this->pokemonModel->all();
+        return $this->pokemonModel->with(['PokemonName'])->get();
     }
 
     /**
@@ -55,7 +55,7 @@ class PokemonService
     }
 
     /**
-     * Get a especific pokemon
+     * Delete a especific pokemon
      *
      * @param integer|null $id
      * @return void

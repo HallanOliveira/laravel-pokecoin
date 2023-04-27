@@ -24,7 +24,9 @@ class StorePokemonRequest extends FormRequest
      */
     public function rules()
     {
-        return Pokemon::$rules;
+        return Pokemon::$baseRules + [
+            'buy_price'  => 'required|numeric|between:0,99999999',
+        ];
     }
 
     /**

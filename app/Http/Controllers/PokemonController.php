@@ -93,9 +93,6 @@ class PokemonController extends Controller
             'data'    => 'Cadastro efetuado com sucesso!',
             'success' => true
         ], 200);
-        // if ($request->validate(Pokemon::$rules)) {
-        //     $this->pokemonService->create($request->all());
-        // }
         // $array_data  = json_decode($json_data, true);
         // $idPokemon   = $array_data['id'];
         // $namePokemon = $array_data['name'];

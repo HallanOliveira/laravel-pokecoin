@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('pokemon', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('pokemon_name_id')->constrained();
             $table->double('buy_price', 8, 2);
-            $table->double('sell_price', 8, 2);
+            $table->double('sell_price', 8, 2)->nullable();
             $table->string('image');
             $table->integer('base_experience');
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
 
 class Pokemon extends Model
 {
@@ -14,7 +15,7 @@ class Pokemon extends Model
     const BITCOIN_TO_POKECOIN =  0.00000001;
 
     protected $fillable = [
-        'name',
+        'pokemon_name_id',
         'buy_price',
         'sell_price',
         'image',
@@ -25,13 +26,16 @@ class Pokemon extends Model
 
     // protected $amountCurrentUSD;
 
-    public static $rules = [
-        'name'            => 'required|string|max:255',
-        'buy_price'       => 'nullable|numeric|between:0,99999999',
-        'sell_price'      => 'nullable|numeric|between:0,99999999',
+    public static $baseRules = [
+        'pokemon_name_id' => 'required|exists:App\Models\PokemonName,id|integer',
         'image'           => 'required|string|max:255',
         'base_experience' => 'required|integer|max:8'
     ];
+
+    public function PokemonName(): belongsTo
+    {
+        return $this->belongsTo(PokemonName::class, 'pokemon_name_id', 'id');
+    }
 
     // /**
     //  * get inventory
